@@ -4,12 +4,13 @@ from django.views.generic import *
 
 # Create your views here.
 
-class Courses(ListView):
+class Courses(TemplateView):
 
     template_name = 'courses.html'
     model = Course
+    context_object_name = 'courses'
 
     def get_context_data(self, **kwargs):
-        for course in Course.objects.get(name):
-            context = Course.objects.get(name)
-            return context
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.all()
+        return context
