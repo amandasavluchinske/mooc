@@ -1,8 +1,8 @@
 {
-  "name": "theprojectname-frontend",
+  "name": "mooc-frontend",
   "version": "0.0.1",
   "private": true,
-  "description": "theprojectname frontend assets.",
+  "description": "mooc frontend assets.",
   "main": "index.js",
   "scripts": {
     "test": "jest",

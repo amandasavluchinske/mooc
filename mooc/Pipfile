@@ -38,6 +38,7 @@ gunicorn = "*"
 opbeat = "*"
 whitenoise = "*"
 ipython = "*"
+request = "*"
 
 
 [requires]

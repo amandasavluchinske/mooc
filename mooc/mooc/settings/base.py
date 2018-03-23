@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django_js_reverse',
     'webpack_loader',
     'import_export',
+    'widget_tweaks',
 
     'common',
     'users',
+    'courses',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'theprojectname.urls'
+ROOT_URLCONF = 'mooc.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'theprojectname.wsgi.application'
+WSGI_APPLICATION = 'mooc.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -120,3 +122,5 @@ WEBPACK_LOADER = {
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mooc', 'media')

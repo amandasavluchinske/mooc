@@ -1,6 +1,6 @@
 {
-  "name": "theprojectname",
-  "description": "Theprojectname Heroku app.",
+  "name": "mooc",
+  "description": "mooc Heroku app.",
   "scripts": {
     "postdeploy": "python manage.py migrate"
   },
@@ -14,7 +14,7 @@
     },
     "DJANGO_SETTINGS_MODULE": {
       "description": "Django settings Python import path",
-      "value": "theprojectname.settings.production"
+      "value": "mooc.settings.production"
     },
     "SECRET_KEY": {
       "description": "Django SECRET_KEY setting",
