@@ -124,3 +124,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mooc', 'media')
+
+# E-mails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Amanda <amanda@vinta.com.br>'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp@gmail.com'
+EMAIL_HOST_USER = 'fooemailfortesting@gmail.com'
+EMAIL_HOST_PASSWORD = 'TestEmail'
+EMAIL_PORT = 587

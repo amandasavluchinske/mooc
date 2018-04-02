@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -24,6 +25,10 @@ class Course(models.Model):
         verbose_name = 'Curso'
         verbose_name_plural = 'Cursos'
         ordering = ['name']
+
+    def get_absolute_url(self):
+        return reverse('details', kwargs={'slug': self.slug})
+
 
 class CourseManager(models.Manager):
     
