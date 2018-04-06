@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'common',
     'users',
     'courses',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,8 @@ EMAIL_HOST = 'smtp@gmail.com'
 EMAIL_HOST_USER = 'fooemailfortesting@gmail.com'
 EMAIL_HOST_PASSWORD = 'TestEmail'
 EMAIL_PORT = 587
+
+# Auth
+LOGIN_URL = '/entrar/'
+LOGIN_REDIRECT_URL = '/painel/'
+LOGOUT_URL = 'logout/'

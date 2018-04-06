@@ -1,5 +1,13 @@
 from django import forms
 from django.conf import settings
+#from django.contrib.auth import get_user_model
+
+#User = get_user_model()
+
+'''class UserRegistration(forms.Form):
+    username = forms.CharField(label='Usuário', max_length=100)
+    e-mail = forms.CharField(label='Usuário', max_length=100)'''
+
 
 class ContactCourse(forms.Form):
     
@@ -12,7 +20,7 @@ class ContactCourse(forms.Form):
         print(cleaned_data)
         return cleaned_data
 
-    def send_mail(self, course):
+    """ def send_mail(self, course):
         subject = '[%s] - CONTATO' % course
         message = 'Nome: %(name)s;E-mail: %(email)s;%(message)s'
         context = {
@@ -23,4 +31,4 @@ class ContactCourse(forms.Form):
 
         }
         message = message % context
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [settings.CONTACT_EMAIL])
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [settings.CONTACT_EMAIL]) """

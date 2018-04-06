@@ -2,24 +2,31 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager
 from .forms import ContactCourse
 from django.views.generic import *
+from django.contrib.auth.views import *
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from templated_email.generic_views import TemplatedEmailFormViewMixin
+from templated_email import send_templated_mail
+from django.contrib.auth import get_user_model, REDIRECT_FIELD_NAME
+
 
 # Create your views here.
 
-class Courses(TemplateView):
+class Courses(ListView):
 
     template_name = 'courses.html'
     model = Course
     context_object_name = 'courses'
 
-    def get_context_data(self, **kwargs):
+    """ def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['courses'] = Course.objects.all()
-        return context
+        return context """
 
-class Details(FormMixin, TemplatedEmailFormViewMixin, DetailView):
+class Details(FormMixin, DetailView):
 
     template_name = 'details.html'
     model = Course
@@ -44,7 +51,54 @@ class Details(FormMixin, TemplatedEmailFormViewMixin, DetailView):
 
     def form_valid(self, form):
         #form.save()
-        form.send_email(course)
+        #form.send_email(course)
+        send_templated_mail(
+            template_name='template',
+            from_email='from@example.com',
+            recipient_list=['to@example.com'],
+            context = {}
+            # Optional:
+            # cc=['cc@example.com'],
+            # bcc=['bcc@example.com'],
+            # headers={'My-Custom-Header':'Custom Value'},
+            # template_prefix="my_emails/",
+            # template_suffix="email",
+        )
         return super(Details, self).form_valid(form)
     
     
+class Login(LoginView):
+
+    template_name = 'login.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('dashboard'))
+        return super(Login, self).get(request)
+
+class Register(FormView):
+    form_class = UserCreationForm
+    template_name = 'register.html'
+    User = get_user_model()
+
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=raw_password)
+        login(self.request, user)
+        return redirect('home')
+
+class Logout(LogoutView):
+    next_page = 'home'  
+
+
+class Dashboard(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard.html'
+    model = Course
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cursos'] = Course.objects.all()
+        return (context)
