@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url  # noqa
 from django.contrib import admin
 from django.views.generic import TemplateView, FormView, ListView
-from courses.views import Courses, Details, Login, Register, Logout, Dashboard
+from courses.views import Courses, Details, Login, Register, Logout, Dashboard, PasswordChange, PasswordChangeDone
 from django.conf.urls.static import static
 
 import django_js_reverse.views
@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^cadastro/$', Register.as_view(), name='register'),
     url(r'^/$', Logout.as_view(), name='logout'),
     url(r'^painel/$', Dashboard.as_view(), name='dashboard'),
+    url(r'^editarsenha/$', PasswordChange.as_view(), name='passwordchange'),
+    url(r'^editarsenha/concluido/$', PasswordChangeDone.as_view(), name='passwordchangedone'),
 ]
 
 if settings.DEBUG:

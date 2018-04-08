@@ -13,7 +13,7 @@ from templated_email import send_templated_mail
 from django.contrib.auth import get_user_model, REDIRECT_FIELD_NAME
 
 
-# Create your views here.
+# COURSES
 
 class Courses(ListView):
 
@@ -65,22 +65,27 @@ class Details(FormMixin, DetailView):
             # template_suffix="email",
         )
         return super(Details, self).form_valid(form)
-    
+
+
+# AUTHENTICATION
     
 class Login(LoginView):
 
     template_name = 'login.html'
     success_url = reverse_lazy('dashboard')
+    redirect_authenticated_user = True
 
     def get(self, request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         return super(Login, self).get(request)
 
+
 class Register(FormView):
     form_class = UserCreationForm
     template_name = 'register.html'
     User = get_user_model()
+    redirect_authenticated_user = True
 
     def form_valid(self, form):
         form.save()
@@ -90,9 +95,19 @@ class Register(FormView):
         login(self.request, user)
         return redirect('home')
 
+
 class Logout(LogoutView):
     next_page = 'home'  
 
+
+class PasswordChange(PasswordChangeView):
+    template_name = 'passwordchange.html'
+    success_url = reverse_lazy('passwordchangedone')
+
+class PasswordChangeDone(PasswordChangeDoneView):
+    template_name = 'passwordchangedone.html'
+
+# USERFEATURES
 
 class Dashboard(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
@@ -102,3 +117,4 @@ class Dashboard(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['cursos'] = Course.objects.all()
         return (context)
+
