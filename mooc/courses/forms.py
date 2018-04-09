@@ -1,12 +1,10 @@
 from django import forms
 from django.conf import settings
-#from django.contrib.auth import get_user_model
 
 #User = get_user_model()
 
-'''class UserRegistration(forms.Form):
-    username = forms.CharField(label='Usuário', max_length=100)
-    e-mail = forms.CharField(label='Usuário', max_length=100)'''
+class UserForm(forms.Form):
+    pass   
 
 
 class ContactCourse(forms.Form):

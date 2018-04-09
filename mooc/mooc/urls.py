@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url  # noqa
 from django.contrib import admin
 from django.views.generic import TemplateView, FormView, ListView
-from courses.views import Courses, Details, Login, Register, Logout, Dashboard, PasswordChange, PasswordChangeDone
+from courses.views import Courses, Details, Login, Register, Logout, Dashboard, PasswordChange, PasswordChangeDone, EditAccount, PasswordReset, PasswordResetConfirm, PasswordResetDone
 from django.conf.urls.static import static
 
 import django_js_reverse.views
@@ -22,6 +22,10 @@ urlpatterns = [
     url(r'^painel/$', Dashboard.as_view(), name='dashboard'),
     url(r'^editarsenha/$', PasswordChange.as_view(), name='passwordchange'),
     url(r'^editarsenha/concluido/$', PasswordChangeDone.as_view(), name='passwordchangedone'),
+    url(r'^redefinirsenha/$', PasswordReset.as_view(), name='passwordreset'),
+    url(r'^redefinirsenha/enviado/$', PasswordResetDone.as_view(), name='passwordresetdone'),
+    url(r'^redefinirsenha/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', PasswordResetConfirm.as_view(), name='passwordresetdone'),
+    url(r'^editarconta/$', EditAccount.as_view(), name='editaccount'),
 ]
 
 if settings.DEBUG:

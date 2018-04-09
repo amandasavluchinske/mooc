@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager
 from .forms import ContactCourse
+from users.models import User
 from django.views.generic import *
 from django.contrib.auth.views import *
 from django.contrib.auth.forms import UserCreationForm
@@ -10,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 from templated_email import send_templated_mail
-from django.contrib.auth import get_user_model, REDIRECT_FIELD_NAME
+from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 
 
 # COURSES
@@ -95,19 +96,37 @@ class Register(FormView):
         login(self.request, user)
         return redirect('home')
 
+# TODO - It's not working yet hehe
+class EditAccount(UpdateView, LoginRequiredMixin):
+    template_name = 'edit.html'
+
 
 class Logout(LogoutView):
     next_page = 'home'  
 
+# Change Password
 
-class PasswordChange(PasswordChangeView):
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     template_name = 'passwordchange.html'
     success_url = reverse_lazy('passwordchangedone')
 
-class PasswordChangeDone(PasswordChangeDoneView):
+class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
     template_name = 'passwordchangedone.html'
 
-# USERFEATURES
+# Reset Password
+
+class PasswordReset(PasswordResetView):
+    template_name = 'registration/password_reset.html'
+    success_url = reverse_lazy('passwordresetdone')
+    
+
+class PasswordResetDone(PasswordResetDoneView):
+    template_name = 'registration/password_reset_done.html'
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+
+# USER FEATURES
 
 class Dashboard(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
