@@ -1,11 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager
-from .forms import ContactCourse
+from .forms import ContactCourse, UserForm
 from users.models import User
 from django.views.generic import *
 from django.contrib.auth.views import *
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import (
+    login,
+    logout,
+    authenticate,
+)
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -83,16 +87,23 @@ class Login(LoginView):
 
 
 class Register(FormView):
-    form_class = UserCreationForm
+    form_class = UserForm
     template_name = 'register.html'
-    User = get_user_model()
+    model = get_user_model()
     redirect_authenticated_user = True
 
+    def get(self, request):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('home'))
+        return super(Register, self).get(request)
+
+
     def form_valid(self, form):
-        form.save()
-        username = form.cleaned_data.get('username')
-        raw_password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=raw_password)
+        raw_password = form.cleaned_data.get('password'),
+        self.object = form.save(commit=False)
+        self.object.set_password(raw_password)
+        self.object.save()
+        user = authenticate(username=self.object.email, password=raw_password)
         login(self.request, user)
         return redirect('home')
 
