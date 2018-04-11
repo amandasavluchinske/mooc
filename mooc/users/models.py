@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 from common.models import IndexedTimeStampedModel
 
@@ -18,6 +19,9 @@ class User(AbstractBaseUser, PermissionsMixin, IndexedTimeStampedModel):
         default=True,
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
+
+    def get_absolute_url(self):
+        return reverse('editaccount')
 
     objects = UserManager()
 

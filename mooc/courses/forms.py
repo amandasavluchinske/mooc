@@ -20,9 +20,14 @@ class UserForm(ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError(
-                "password and confirm_password does not match"
+                "As senhas não são iguais!"
             )
 
+class EditAccount(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['name', 'email']
 
 class ContactCourse(forms.Form):
     

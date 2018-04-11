@@ -18,7 +18,7 @@
                 
                 <li class="pure-menu-heading">Minha Conta</li>
                 <ul>
-                <li><a href="{% url 'editaccount' %}">Editar Conta</a></li>
+                <li><a href="{{ user.get_absolute_url }}">Editar Conta</a></li>
                 <li><a href="{% url 'passwordchange' %}">Editar Senha</a></li>
             </ul>
         </div>

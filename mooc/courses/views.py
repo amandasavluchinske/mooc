@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager
-from .forms import ContactCourse, UserForm
+from .forms import ContactCourse, UserForm, EditAccount
 from users.models import User
 from django.views.generic import *
 from django.contrib.auth.views import *
@@ -110,6 +110,28 @@ class Register(FormView):
 # TODO - It's not working yet hehe
 class EditAccount(UpdateView, LoginRequiredMixin):
     template_name = 'edit.html'
+    model = User
+    fields = ['name', 'email']
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.pk)
+
+"""     def get_form_kwargs(self):
+        kwargs = super(EditAccount, self).get_form_kwargs()
+        kwargs['user'] = kwargs.pop('instance')
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        if request.user != get_object_or_404(User, pk=kwargs['pk']):
+            raise PermissionDenied
+        return super(EditAccount, self).get(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            'Seus dados foram alterados com sucesso. Faça login novamente.'
+            )
+        return super(EditAccount, self).form_valid(form) """
 
 
 class Logout(LogoutView):
