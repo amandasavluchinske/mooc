@@ -2,32 +2,8 @@ from django import forms
 from django.forms import ModelForm
 from django.conf import settings
 from users.models import User
-
-#User = get_user_model()
-
-class UserForm(ModelForm):
-    password=forms.CharField(widget=forms.PasswordInput())
-    confirm_password=forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = User
-        fields = ['name', 'email', 'password']
-
-    def clean(self):
-        cleaned_data = super(UserForm, self).clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-
-        if password != confirm_password:
-            raise forms.ValidationError(
-                "As senhas não são iguais!"
-            )
-
-class EditAccount(ModelForm):
-
-    class Meta:
-        model = User
-        fields = ['name', 'email']
+from django.contrib.auth.forms import PasswordResetForm
+from templated_email import send_templated_mail
 
 class ContactCourse(forms.Form):
     
@@ -39,16 +15,3 @@ class ContactCourse(forms.Form):
         cleaned_data = super().clean()
         print(cleaned_data)
         return cleaned_data
-
-    """ def send_mail(self, course):
-        subject = '[%s] - CONTATO' % course
-        message = 'Nome: %(name)s;E-mail: %(email)s;%(message)s'
-        context = {
-
-            'name': self.cleaned_data['name'],
-            'email': self.cleaned_data['email'],
-            'message': self.cleaned_data['message']
-
-        }
-        message = message % context
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [settings.CONTACT_EMAIL]) """

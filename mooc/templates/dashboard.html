@@ -26,7 +26,7 @@
     <div class="pure-u-2-3">
         <div class="inner">
             {% block dashboard_content %}
-            <p><strong>Usuário</strong>: {{ user }}</p>
+            <p><strong>Usuário</strong>: {{ user.name }}</p>
             <p><strong>E-mail</strong>: {{ user.email }}</p>
             {% endblock %}
         </div>

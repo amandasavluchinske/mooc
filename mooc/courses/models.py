@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from users.models import User
 
-# Create your models here.
 
 class Course(models.Model):
 
@@ -38,3 +38,14 @@ class CourseManager(models.Manager):
         models.Q(name__icontains=query) | 
         models.Q(description__icontains=query)
         )
+
+""" class Enrollment(models.Model):
+
+    STATUS_CHOICES=(
+
+        (0, )
+
+    ) """
+
+    #user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuário', related_name='enrollments')
+    #course = models.ForeignKey(Course, verbose_name='Curso', related_name='enrollments')

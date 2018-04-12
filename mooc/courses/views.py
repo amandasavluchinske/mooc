@@ -1,22 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager
-from .forms import ContactCourse, UserForm, EditAccount
-from users.models import User
+from .forms import ContactCourse
 from django.views.generic import *
 from django.contrib.auth.views import *
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import (
-    login,
-    logout,
-    authenticate,
-)
 from django.views.generic.edit import FormMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 from templated_email import send_templated_mail
-from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
-
 
 # COURSES
 
@@ -55,118 +45,11 @@ class Details(FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        #form.save()
-        #form.send_email(course)
+
         send_templated_mail(
             template_name='template',
             from_email='from@example.com',
             recipient_list=['to@example.com'],
             context = {}
-            # Optional:
-            # cc=['cc@example.com'],
-            # bcc=['bcc@example.com'],
-            # headers={'My-Custom-Header':'Custom Value'},
-            # template_prefix="my_emails/",
-            # template_suffix="email",
         )
         return super(Details, self).form_valid(form)
-
-
-# AUTHENTICATION
-    
-class Login(LoginView):
-
-    template_name = 'login.html'
-    success_url = reverse_lazy('dashboard')
-    redirect_authenticated_user = True
-
-    def get(self, request):
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse_lazy('dashboard'))
-        return super(Login, self).get(request)
-
-
-class Register(FormView):
-    form_class = UserForm
-    template_name = 'register.html'
-    model = get_user_model()
-    redirect_authenticated_user = True
-
-    def get(self, request):
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse_lazy('home'))
-        return super(Register, self).get(request)
-
-
-    def form_valid(self, form):
-        raw_password = form.cleaned_data.get('password'),
-        self.object = form.save(commit=False)
-        self.object.set_password(raw_password)
-        self.object.save()
-        user = authenticate(username=self.object.email, password=raw_password)
-        login(self.request, user)
-        return redirect('home')
-
-# TODO - It's not working yet hehe
-class EditAccount(UpdateView, LoginRequiredMixin):
-    template_name = 'edit.html'
-    model = User
-    fields = ['name', 'email']
-
-    def get_object(self):
-        return User.objects.get(pk=self.request.user.pk)
-
-"""     def get_form_kwargs(self):
-        kwargs = super(EditAccount, self).get_form_kwargs()
-        kwargs['user'] = kwargs.pop('instance')
-        return kwargs
-
-    def get(self, request, *args, **kwargs):
-        if request.user != get_object_or_404(User, pk=kwargs['pk']):
-            raise PermissionDenied
-        return super(EditAccount, self).get(request, *args, **kwargs)
-    
-    def form_valid(self, form):
-        messages.success(
-            self.request,
-            'Seus dados foram alterados com sucesso. Faça login novamente.'
-            )
-        return super(EditAccount, self).form_valid(form) """
-
-
-class Logout(LogoutView):
-    next_page = 'home'  
-
-# Change Password
-
-class PasswordChange(LoginRequiredMixin, PasswordChangeView):
-    template_name = 'passwordchange.html'
-    success_url = reverse_lazy('passwordchangedone')
-
-class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
-    template_name = 'passwordchangedone.html'
-
-# Reset Password
-
-class PasswordReset(PasswordResetView):
-    template_name = 'registration/password_reset.html'
-    success_url = reverse_lazy('passwordresetdone')
-    
-
-class PasswordResetDone(PasswordResetDoneView):
-    template_name = 'registration/password_reset_done.html'
-
-class PasswordResetConfirm(PasswordResetConfirmView):
-    template_name = 'registration/password_reset_confirm.html'
-
-# USER FEATURES
-
-class Dashboard(LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard.html'
-    model = Course
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cursos'] = Course.objects.all()
-        return (context)
-

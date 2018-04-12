@@ -2,6 +2,12 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import (
+    login,
+    logout,
+    authenticate,
+)
 
 from common.models import IndexedTimeStampedModel
 
@@ -20,6 +26,8 @@ class User(AbstractBaseUser, PermissionsMixin, IndexedTimeStampedModel):
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
 
+    date_joined = models.DateTimeField('Data de entrada', auto_now_add=True)
+
     def get_absolute_url(self):
         return reverse('editaccount')
 
@@ -32,3 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin, IndexedTimeStampedModel):
 
     def get_short_name(self):
         return self.email
+
+    class Meta:
+        verbose_name = 'Usuário'
+        verbose_name_plural = 'Usuários'
