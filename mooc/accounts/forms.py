@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.conf import settings
 from users.models import User
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from templated_email import send_templated_mail
 
 class UserForm(ModelForm):
@@ -34,7 +34,7 @@ class PasswordReset(PasswordResetForm):
             context=context
         )
 
-class PasswordResetConfirm(PasswordResetForm):
+class PasswordResetConfirm(SetPasswordForm):
     pass
 
 class EditAccount(ModelForm):

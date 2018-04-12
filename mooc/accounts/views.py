@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import *
 from django.contrib.auth.views import *
-from .forms import UserForm, EditAccount, PasswordReset
+from .forms import UserForm, EditAccount, PasswordReset, PasswordResetConfirm
 from courses.models import Course, CourseManager
 from users.models import User
 from django.views.generic.edit import FormMixin
@@ -110,19 +110,8 @@ class PasswordReset(PasswordResetView):
 class PasswordResetConfirm(PasswordResetConfirmView):
     template_name = 'registration/password_reset_confirm.html'
     success_url = reverse_lazy('dashboard')
+    form_class = PasswordResetConfirm
 
-    def form_valid(self, form):
-        if not self.validlink:
-            return self.form_invalid(form)
-
-        user = self.save_form(form)
-
-        """ if self.post_reset_login:
-            auth_login(self.request, user, self.post_reset_login_backend)
- """
-        response = super(PasswordResetConfirmView, self).form_valid(form)
-
-        return response
 
 # USER FEATURES
 
