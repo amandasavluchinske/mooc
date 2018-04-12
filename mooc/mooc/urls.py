@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url  # noqa
 from django.contrib import admin
 from django.views.generic import TemplateView, FormView, ListView
-from courses.views import Courses, Details
+from courses.views import Courses, Details, Enrollment
 from accounts.views import Login, Register, Logout, Dashboard, PasswordChange, PasswordChangeDone, EditAccount, PasswordReset, PasswordResetConfirm
 from django.conf.urls.static import static
 
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^redefinirsenha/$', PasswordReset.as_view(), name='passwordreset'),
     url(r'^redefinirsenha/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', PasswordResetConfirm.as_view(), name='passwordresetconfirm'),
     url(r'^editarconta/$', EditAccount.as_view(), name='editaccount'),
+    url(r'^cursos/(?P<slug>[\w-]+)/inscricao/$', Enrollment.as_view(), name='enrollment'),
 ]
 
 #(?P<uidb64>[0-9A-Za-z_\-]+)

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, CourseManager
+from .models import Course, CourseManager, Enrollments
 from .forms import ContactCourse
 from django.views.generic import *
 from django.contrib.auth.views import *
@@ -7,6 +7,8 @@ from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 from templated_email import send_templated_mail
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # COURSES
 
@@ -53,3 +55,19 @@ class Details(FormMixin, DetailView):
             context = {}
         )
         return super(Details, self).form_valid(form)
+
+class Enrollment(DetailView, LoginRequiredMixin):
+
+    model = Enrollments
+    template_name = 'index.html'
+
+    def get_object(self):
+	    course = get_object_or_404(Course, slug=self.kwargs['slug'])
+	    return Enrollments.objects.get_or_create(user=self.request.user, course=course)
+
+    def get_success_url(self):
+
+        return reverse('dashboard')
+    
+    #if created:
+    #    enrollment.active()

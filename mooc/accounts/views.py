@@ -112,7 +112,6 @@ class PasswordResetConfirm(PasswordResetConfirmView):
     success_url = reverse_lazy('dashboard')
     form_class = PasswordResetConfirm
 
-
 # USER FEATURES
 
 class Dashboard(LoginRequiredMixin, TemplateView):
