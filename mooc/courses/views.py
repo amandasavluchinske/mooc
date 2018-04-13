@@ -9,6 +9,7 @@ from templated_email.generic_views import TemplatedEmailFormViewMixin
 from templated_email import send_templated_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # COURSES
 
@@ -56,6 +57,8 @@ class Details(FormMixin, DetailView):
         )
         return super(Details, self).form_valid(form)
 
+# TODO - MAKE THIS LOGINREQUIRED WORK!
+
 class Enrollment(DetailView, LoginRequiredMixin):
 
     model = Enrollments
@@ -66,8 +69,5 @@ class Enrollment(DetailView, LoginRequiredMixin):
 	    return Enrollments.objects.get_or_create(user=self.request.user, course=course)
 
     def get_success_url(self):
-
         return reverse('dashboard')
     
-    #if created:
-    #    enrollment.active()
