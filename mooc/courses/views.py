@@ -49,13 +49,22 @@ class Details(FormMixin, DetailView):
 
     def form_valid(self, form):
 
+        messages.success(self.request, 'Seu e-mail foi enviado!')
+
+        message_content = form.cleaned_data.get('message')
+        name = form.cleaned_data.get('name')
+        email = form.cleaned_data.get('email'),
+
         send_templated_mail(
             template_name='template',
-            from_email='from@example.com',
+            from_email=email,
             recipient_list=['to@example.com'],
-            context = {}
+            context = {
+                'name': name,
+                'message_content': message_content
+            }
         )
-        return super(Details, self).form_valid(form)
+        return super().form_valid(form)
 
 # TODO - MAKE THIS LOGINREQUIRED WORK!
 

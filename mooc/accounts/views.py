@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import auth
 from django.views.generic import *
 from django.contrib.auth.views import *
+from django.contrib.auth import authenticate
 from .forms import UserForm, EditAccount, PasswordReset, PasswordResetConfirm
 from courses.models import Course, CourseManager, Enrollments
 from users.models import User
@@ -12,6 +13,7 @@ from templated_email.generic_views import TemplatedEmailFormViewMixin
 from templated_email import send_templated_mail
 from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 # AUTHENTICATION
@@ -41,7 +43,7 @@ class Register(FormView):
 
 
     def form_valid(self, form):
-        raw_password = form.cleaned_data.get('password'),
+        raw_password = form.cleaned_data.get('password')
         self.object = form.save(commit=False)
         self.object.set_password(raw_password)
         self.object.save()
@@ -49,10 +51,12 @@ class Register(FormView):
         login(self.request, user)
         return redirect('home')
 
-class EditAccount(UpdateView, LoginRequiredMixin):
+class EditAccount(UpdateView, LoginRequiredMixin, SuccessMessageMixin):
     template_name = 'edit.html'
     model = User
     fields = ['name', 'email']
+
+    success_message = 'Você alterou as suas informações com sucesso!'
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
