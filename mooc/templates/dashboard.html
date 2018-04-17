@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load courses_tags %}
 
 {% block content %}
 <div class="pure-g-r content-ribbon">
@@ -11,14 +12,9 @@
     </div>
     <div class="pure-u-1-3">
         <div class="pure-menu pure-menu-open">
-            <a class="pure-menu-heading">Meus Cursos</a>
             <ul>
-                {% for enrollment in enrollments %}
-                <li><a href="">{{ enrollment.course }}</a></li>
-            
-            {% endfor %}
-            </ul>
-                
+                {% load_my_courses user as enrollments %}
+                </ul>
                 <li class="pure-menu-heading">Minha Conta</li>
                 <ul>
                 <li><a href="{{ user.get_absolute_url }}">Editar Conta</a></li>
