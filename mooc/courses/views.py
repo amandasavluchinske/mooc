@@ -19,11 +19,6 @@ class Courses(ListView):
     model = Course
     context_object_name = 'courses'
 
-    """ def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['courses'] = Course.objects.all()
-        return context """
-
 class Details(FormMixin, DetailView):
 
     template_name = 'details.html'
@@ -66,8 +61,6 @@ class Details(FormMixin, DetailView):
         )
         return super().form_valid(form)
 
-# TODO - MAKE THIS LOGINREQUIRED WORK!
-
 class Enrollment(DetailView, LoginRequiredMixin):
 
     model = Enrollments
@@ -80,3 +73,35 @@ class Enrollment(DetailView, LoginRequiredMixin):
     def get_success_url(self):
         return reverse('dashboard')
     
+class Announcements(DetailView, LoginRequiredMixin):
+
+    model = Course
+    template_name = 'announcements.html'
+
+    def _confirm_enrollment(self, user, course):
+        return Enrollments.objects.filter(user=user, course=course).exists()
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        course = self.get_object()
+        if not self._confirm_enrollment(user=user, course=course):
+            return HttpResponseRedirect(reverse('dashboard'))
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+'''    def get_object(self):
+        user = self.request.user
+        return get_object_or_404(Enrollments, user=user)'''
+        
+
+
+class Unrollment(DeleteView, LoginRequiredMixin):
+    pass
+
+
+""" enrollment = get_object_or_404(
+            Enrollments, user=self.request.user, course=course
+        )
+        if not enrollment.is_approved():
+            messages.error(self.request, 'A sua inscrição ainda está pendente.')
+            return reverse_lazy('dashboard') """

@@ -3,7 +3,7 @@ from django.template import Library
 from courses.models import Enrollments
 register = Library()
 
-@register.inclusion_tag('../templates/my_courses.html')
+@register.filter
 def my_courses(user):
     enrollments = Enrollments.objects.filter(user=user)
     context = {'enrollments': enrollments}
