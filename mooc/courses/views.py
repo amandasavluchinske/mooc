@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseManager, Enrollments
 from .forms import ContactCourse
+from .helpers import confirm_enrollment
 from django.views.generic import *
 from django.contrib.auth.views import *
 from django.views.generic.edit import FormMixin
@@ -61,7 +62,7 @@ class Details(FormMixin, DetailView):
         )
         return super().form_valid(form)
 
-class Enrollment(DetailView, LoginRequiredMixin):
+class Enrollment(LoginRequiredMixin, DetailView):
 
     model = Enrollments
     template_name = 'index.html'
@@ -73,18 +74,15 @@ class Enrollment(DetailView, LoginRequiredMixin):
     def get_success_url(self):
         return reverse('dashboard')
     
-class Announcements(DetailView, LoginRequiredMixin):
+class Announcements(LoginRequiredMixin, DetailView):
 
     model = Course
     template_name = 'announcements.html'
 
-    def _confirm_enrollment(self, user, course):
-        return Enrollments.objects.filter(user=user, course=course).exists()
-
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
         course = self.get_object()
-        if not self._confirm_enrollment(user=user, course=course):
+        if not confirm_enrollment(user=user, course=course):
             return HttpResponseRedirect(reverse('dashboard'))
         return super().dispatch(request, *args, **kwargs)
     
@@ -95,13 +93,14 @@ class Announcements(DetailView, LoginRequiredMixin):
         
 
 
-class Unrollment(DeleteView, LoginRequiredMixin):
-    pass
+class Unrollment(LoginRequiredMixin, DeleteView):
 
+    template_name = 'undo_enrollment.html'
+    model = Enrollments
+    success_url = 'dashboard'
 
-""" enrollment = get_object_or_404(
-            Enrollments, user=self.request.user, course=course
-        )
-        if not enrollment.is_approved():
-            messages.error(self.request, 'A sua inscrição ainda está pendente.')
-            return reverse_lazy('dashboard') """
+    def get_object(self):
+        return get_object_or_404(Enrollments, user=self.request.user, course__slug=self.kwargs['slug'])
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
