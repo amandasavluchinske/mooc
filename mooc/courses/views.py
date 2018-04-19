@@ -97,10 +97,10 @@ class Unrollment(LoginRequiredMixin, DeleteView):
 
     template_name = 'undo_enrollment.html'
     model = Enrollments
-    success_url = 'dashboard'
 
     def get_object(self):
         return get_object_or_404(Enrollments, user=self.request.user, course__slug=self.kwargs['slug'])
 
     def get_success_url(self):
+        messages.success(self.request, 'Você cancelou a sua inscrição com sucesso.')
         return reverse_lazy('dashboard')
