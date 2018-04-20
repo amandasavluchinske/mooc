@@ -93,6 +93,9 @@ class Comment(models.Model):
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
 
+    def __str__(self):
+        return self.comment
+
     class Meta:
         verbose_name='Comentário'
         verbose_name_plural='Comentários'

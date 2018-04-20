@@ -99,6 +99,9 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
     context_object_name = 'announcement'
     form_class = CommentAnnouncement
 
+    def get_success_url(self):
+        return reverse_lazy('show_announcement', kwargs={'slug': self.kwargs['slug'], 'pk': self.kwargs['pk']})
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         announcement = self.get_object()
@@ -106,6 +109,7 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
         context['comments'] = comments
         context['form'] = CommentAnnouncement
         return (context)
+
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -120,8 +124,8 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
         messages.success(self.request, 'Seu comentário foi postado!')
 
         comment = form.cleaned_data.get('comment')
-        user = self.request.user
-
+        post = Comment.objects.create(comment=comment)
+        
         return super().form_valid(form)
         
 
