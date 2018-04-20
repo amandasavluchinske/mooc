@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url  # noqa
 from django.contrib import admin
 from django.views.generic import TemplateView, FormView, ListView
-from courses.views import Courses, Details, Enrollment, Announcements, Unrollment
+from courses.views import Courses, Details, Enrollment, Announcements, Unrollment, ShowAnnouncement
 from accounts.views import Login, Register, Logout, Dashboard, PasswordChange, PasswordChangeDone, EditAccount, PasswordReset, PasswordResetConfirm
 from django.conf.urls.static import static
 
@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^cursos/(?P<slug>[\w-]+)/inscricao/$', Enrollment.as_view(), name='enrollment'),
     url(r'^(?P<slug>[\w-]+)/anuncios/$', Announcements.as_view(), name='announcements'),
     url(r'^(?P<slug>[\w-]+)/cancelar/$', Unrollment.as_view(), name='unrollment'),
+    url(r'^(?P<slug>[\w-]+)/anuncios/(?P<pk>\d+)$', ShowAnnouncement.as_view(), name='show_announcement'),
 
 ]
 

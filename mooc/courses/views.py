@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, CourseManager, Enrollments
-from .forms import ContactCourse
+from .models import Course, CourseManager, Enrollments, Announcement, Comment
+from .forms import ContactCourse, CommentAnnouncement
 from .helpers import confirm_enrollment
 from django.views.generic import *
 from django.contrib.auth.views import *
@@ -19,7 +19,7 @@ class Courses(ListView):
     template_name = 'courses.html'
     model = Course
     context_object_name = 'courses'
-
+ContactCourse
 class Details(FormMixin, DetailView):
 
     template_name = 'details.html'
@@ -49,7 +49,7 @@ class Details(FormMixin, DetailView):
 
         message_content = form.cleaned_data.get('message')
         name = form.cleaned_data.get('name')
-        email = form.cleaned_data.get('email'),
+        email = form.cleaned_data.get('email')
 
         send_templated_mail(
             template_name='template',
@@ -85,11 +85,44 @@ class Announcements(LoginRequiredMixin, DetailView):
         if not confirm_enrollment(user=user, course=course):
             return HttpResponseRedirect(reverse('dashboard'))
         return super().dispatch(request, *args, **kwargs)
-    
-    
-'''    def get_object(self):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['announcements'] = Announcement.objects.filter(course=self.get_object())
+        return (context)
+
+
+class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
+
+    model = Announcement
+    template_name = 'announcement.html'
+    context_object_name = 'announcement'
+    form_class = CommentAnnouncement
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        announcement = self.get_object()
+        comments = Comment.objects.filter(announcement=announcement)
+        context['comments'] = comments
+        context['form'] = CommentAnnouncement
+        return (context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+
+        messages.success(self.request, 'Seu comentário foi postado!')
+
+        comment = form.cleaned_data.get('comment')
         user = self.request.user
-        return get_object_or_404(Enrollments, user=user)'''
+
+        return super().form_valid(form)
         
 
 

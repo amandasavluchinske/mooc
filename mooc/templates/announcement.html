@@ -1,0 +1,36 @@
+{% extends "course_dashboard.html" %}
+
+{% block dashboard_content %}
+
+<div class="well">
+        <h2>{{ announcement.title }}</h2>
+        <p>
+            {{ announcement.content }}
+        </p>
+    </div>
+    <div class="well">
+        <h4 id="comments">Comentários
+        <a class="fright" href="#add_comment">Comentar</a></h4>
+        <hr />
+        {% for comment in comments %}
+        <p>
+            <strong>{{ comment.user.name }}</strong> disse há {{ comment.created_at|timesince }} atrás: <br />
+            {{ comment.comment|linebreaksbr }}
+        </p>
+        {% endfor %}
+        <hr>
+        <form method="post" class="pure-form pure-form-stacked" id="add_comment">
+            <fieldset>
+                <div class="pure-control-group">
+                    <label for="password">Comentário</label>
+                    <textarea cols="40" rows="4"></textarea>
+                </div>
+
+                <div class="pure-controls">
+                    <button type="submit" class="pure-button pure-button-primary">Enviar</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+{% endblock %}
