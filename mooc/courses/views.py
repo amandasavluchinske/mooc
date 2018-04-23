@@ -123,8 +123,10 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
 
         messages.success(self.request, 'Seu comentário foi postado!')
 
+        user = self.request.user
         comment = form.cleaned_data.get('comment')
-        post = Comment.objects.create(comment=comment)
+        announcement = self.get_object()
+        post = Comment.objects.create(comment=comment, user=user, announcement=announcement)
         
         return super().form_valid(form)
         

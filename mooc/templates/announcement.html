@@ -19,7 +19,7 @@
         </p>
         {% endfor %}
         <hr>
-        <form method="post" class="pure-form pure-form-stacked" id="add_comment">
+        <form method="POST" class="pure-form pure-form-stacked" id="add_comment">
             {% csrf_token %}
             <fieldset>
                 {% for field in form %}
