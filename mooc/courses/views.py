@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, CourseManager, Enrollments, Announcement, Comment
+from .models import Course, Enrollments, Announcement, Comment
+from .managers import CourseManager
 from .forms import ContactCourse, CommentAnnouncement
 from .helpers import confirm_enrollment
 from django.views.generic import *
@@ -19,7 +20,7 @@ class Courses(ListView):
     template_name = 'courses.html'
     model = Course
     context_object_name = 'courses'
-ContactCourse
+    
 class Details(FormMixin, DetailView):
 
     template_name = 'details.html'

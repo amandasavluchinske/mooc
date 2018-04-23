@@ -32,13 +32,44 @@ class Course(models.Model):
         return reverse('details', kwargs={'slug': self.slug})
 
 
-class CourseManager(models.Manager):
+class Lesson(models.Model):
     
-    def search(self, query):
-        return self.get_queryset().filter(
-        models.Q(name__icontains=query) | 
-        models.Q(description__icontains=query)
-        )
+    name = models.CharField('Nome', max_length=100)
+    description = models.TextField('Descrição', blank=True)
+    number = models.IntegerField('Número (ordem)', blank=True, default=0)
+    release_date = models.DateField('Data de publicação', blank=True, null=True)
+
+    course = models.ForeignKey(Course, verbose_name='Curso', related_name='lessons')
+
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Aula'
+        verbose_name_plural = 'Aulas'
+        ordering = ['number']
+
+
+class Material(models.Model):
+
+    name = models.CharField('Nome', max_length=100)
+    embedded = models.TextField('Vídeo incorporado', blank=True)
+    fileup = models.FileField(upload_to='lessons/materials', blank=True)
+
+    lesson = models.ForeignKey(Lesson, verbose_name='Aula', related_name='materials')
+
+    def is_embedded(self):
+        return bool(self.embedded)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Material'
+        verbose_name_plural = 'Materiais'
 
 class Enrollments(models.Model):
 
@@ -69,6 +100,7 @@ class Enrollments(models.Model):
 
     objects = models.Manager()
 
+
 class Announcement(models.Model):
 
     course = models.ForeignKey(Course, verbose_name='Curso')
@@ -84,6 +116,7 @@ class Announcement(models.Model):
         verbose_name='Anúncio'
         verbose_name_plural='Anúncios'
         ordering=['-created_at']
+
 
 class Comment(models.Model):
     

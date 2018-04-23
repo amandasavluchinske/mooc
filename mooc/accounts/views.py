@@ -4,7 +4,8 @@ from django.views.generic import *
 from django.contrib.auth.views import *
 from django.contrib.auth import authenticate
 from .forms import UserForm, EditAccount, PasswordReset, PasswordResetConfirm
-from courses.models import Course, CourseManager, Enrollments
+from courses.models import Course, Enrollments
+from courses.managers import CourseManager
 from users.models import User
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
