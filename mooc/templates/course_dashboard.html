@@ -10,7 +10,7 @@
     {{ course }}
 </li>
 <li>
-    <a href="#">
+    <a href="{% url 'lessons' course.slug %}">
         <i class="fa fa-video-camera"></i>
         Aulas e Materiais
     </a>
@@ -22,15 +22,9 @@
     </a>
 </li>
 <li>
-    <a href="#">
+    <a href="{% url 'announcements' course.slug %}">
         <i class="fa fa-envelope"></i>
         Anúncios
-    </a>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-comments"></i>
-        Fórum de Dúvidas
     </a>
 </li>
 {{ block.super }}

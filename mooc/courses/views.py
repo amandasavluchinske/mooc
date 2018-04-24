@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, Enrollments, Announcement, Comment
+from .models import Course, Enrollments, Announcement, Comment, Lesson, Material
 from .managers import CourseManager
 from .forms import ContactCourse, CommentAnnouncement
 from .helpers import confirm_enrollment
@@ -20,7 +20,7 @@ class Courses(ListView):
     template_name = 'courses.html'
     model = Course
     context_object_name = 'courses'
-    
+
 class Details(FormMixin, DetailView):
 
     template_name = 'details.html'
@@ -79,7 +79,7 @@ class Announcements(LoginRequiredMixin, DetailView):
 
     model = Course
     template_name = 'announcements.html'
-
+ 
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
         course = self.get_object()
@@ -130,7 +130,45 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
         post = Comment.objects.create(comment=comment, user=user, announcement=announcement)
         
         return super().form_valid(form)
-        
+
+    
+class Lessons(LoginRequiredMixin, DetailView):
+    model = Course
+    template_name = 'lessons.html'
+    context_object_name = 'course'
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        course = self.get_object()
+        if not confirm_enrollment(user=user, course=course):
+            return HttpResponseRedirect(reverse('dashboard'))
+        return super().dispatch(request, *args, **kwargs)
+
+
+class LessonDetail(DetailView):
+
+    model = Lesson
+    template_name = 'lesson.html'
+    context_object_name = 'lesson'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        lesson = self.get_object()
+        context['course'] = lesson.course
+        return (context)
+
+
+class ClassMaterial(DetailView):
+    model = Lesson
+    template_name = 'material.html'
+    context_object_name = 'lesson'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        lesson = self.get_object()
+        context['course'] = lesson.course
+        lessonslist = lesson.course.lessons
+        return (context)
 
 
 class Unrollment(LoginRequiredMixin, DeleteView):
