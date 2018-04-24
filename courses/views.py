@@ -109,6 +109,8 @@ class ShowAnnouncement(LoginRequiredMixin, FormMixin, DetailView):
         comments = Comment.objects.filter(announcement=announcement)
         context['comments'] = comments
         context['form'] = CommentAnnouncement
+        context['course'] = announcement.course
+        lessonslist = announcement.course.lessons
         return (context)
 
 
