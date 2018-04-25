@@ -37,6 +37,7 @@ request = "*"
 django-widget-tweaks = "*"
 django-templated-email = "*"
 pillow = "*"
+django-naomi = "*"
 
 [requires]
 python_version = "3.6"
