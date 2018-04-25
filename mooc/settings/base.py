@@ -119,12 +119,6 @@ WEBPACK_LOADER = {
     }
 }
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = config('SENDGRID_USERNAME', default='')
-EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD', default='')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
 # Celery
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -136,3 +130,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/entrar/'
 LOGIN_REDIRECT_URL = '/painel/'
 LOGOUT_URL = 'logout/'
+
+""" EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = config('SENDGRID_USERNAME', default='')
+EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD', default='')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True """

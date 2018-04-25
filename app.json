@@ -47,6 +47,9 @@
       "as": "REDIS"
     },
     {
+      "plan": "sendgrid:starter"
+    },
+    {
       "plan": "papertrail:choklad"
     },
     {
