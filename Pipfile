@@ -36,6 +36,7 @@ ipython = "*"
 request = "*"
 django-widget-tweaks = "*"
 django-templated-email = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.6"
