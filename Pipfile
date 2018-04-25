@@ -35,6 +35,7 @@ whitenoise = "*"
 ipython = "*"
 request = "*"
 django-widget-tweaks = "*"
+django-templated-email = "*"
 
 [requires]
 python_version = "3.6"
